@@ -28,10 +28,10 @@ export class Catalog {
         }
 
         for (const item of catalogItems.specificItems) {
-            if (this.mapSpecific.has(item.pid)) {
-                throw TypeError(`Catalog: encountered duplicate pid ${item.pid}.`);
+            if (this.mapSpecific.has(item.sku)) {
+                throw TypeError(`Catalog: encountered duplicate sku ${item.sku}.`);
             }
-            this.mapSpecific.set(item.pid, item);
+            this.mapSpecific.set(item.sku, item);
         }
     }
 
@@ -55,10 +55,10 @@ export class Catalog {
     }
 
     // TODO: modify get to throw if not available.
-    get(pid: PID): ItemDescription {
-        const item = this.mapSpecific.get(pid);
+    get(sku: PID): ItemDescription {
+        const item = this.mapSpecific.get(sku);
         if (!item) {
-            throw TypeError(`Catalog.get(): cannot find pid=${pid}`);
+            throw TypeError(`Catalog.get(): cannot find sku=${sku}`);
         }
         return item;
     }

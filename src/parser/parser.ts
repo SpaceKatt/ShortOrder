@@ -212,7 +212,7 @@ export class Parser {
         let succeeded = false;
         if (builder.hasEntity()) {
             const quantity = builder.getQuantity();
-            const pid = builder.getPID();
+            const pid = builder.getSKU();
 
             if (pid !== undefined) {
                 s = this.ops.updateCart(s, pid, quantity);

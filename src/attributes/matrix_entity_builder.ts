@@ -56,7 +56,7 @@ export class MatrixEntityBuilder {
         }
     }
 
-    getPID(): PID | undefined {
+    getSKU(): PID | undefined {
         if (this.entityId === undefined) {
             const message = `no entity set`;
             throw TypeError(message);
@@ -70,7 +70,7 @@ export class MatrixEntityBuilder {
         }
 
         const key = matrix.getKey(this.entityId, this.dimensionIdToAttribute, this.info);
-        const pid = this.info.getPID(key);
+        const pid = this.info.getSKU(key);
 
         return pid;
     }

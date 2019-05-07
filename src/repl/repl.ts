@@ -8,7 +8,7 @@ import { PID, Token } from 'token-flow';
 import { actionToString, AnyAction } from '../actions';
 import { attributesFromYamlString, AttributeInfo } from '../attributes';
 import { CartOps, State } from '../cart';
-import { Catalog, CatalogItems, ConvertDollarsToPennies, validateCatalogItems, ItemDescription } from '../catalog';
+import { Catalog, CatalogItems, ConvertDollarsToPennies, validateCatalogItems, ParentItemDescription, ItemDescription } from '../catalog';
 import { Parser } from '../parser';
 import { speechToTextFilter } from './speech_to_text_filter';
 import { responses } from '../turn';
@@ -20,7 +20,8 @@ const maxHistorySteps = 1000;
 const historyFile = '.repl_history';
 
 export function runRepl(
-    catlogFile: string,
+    generalCatalogFile: string,
+    catalogFile: string,
     intentFile: string,
     attributesFile: string,
     quantifierFile: string,
@@ -38,7 +39,8 @@ export function runRepl(
 
     // Set up the tokenizer pipeline.
     const unified = new Unified(
-        catlogFile,
+        generalCatalogFile,
+        catalogFile,
         intentFile,
         attributesFile,
         quantifierFile,
@@ -49,7 +51,18 @@ export function runRepl(
 
     // Set up the conversational agent and parser.
     // TODO: can we avoid reading the catalog twice?
-    const catalogItems = yaml.safeLoad(fs.readFileSync(catlogFile, 'utf8')) as CatalogItems;
+    const genericItems = yaml.safeLoad(fs.readFileSync(generalCatalogFile, 'utf8')) as {
+      items: ParentItemDescription[];
+    };
+
+    const specificItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as {
+        items: ItemDescription[];
+    };
+    const catalogItems: CatalogItems = {
+        genericItems: genericItems.items,
+        specificItems: specificItems.items,
+    };
+
     validateCatalogItems(catalogItems);
     ConvertDollarsToPennies(catalogItems);
     const catalog = new Catalog(catalogItems);

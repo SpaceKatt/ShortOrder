@@ -181,6 +181,7 @@ export class Unified {
     tokenizer: Tokenizer;
 
     constructor(
+        genericEntityFile: string,
         entityFile: string,
         intentsFile: string,
         attributesFile: string,
@@ -202,6 +203,12 @@ export class Unified {
         const attributeItems = itemsFromAttributes(attributes);
         const attributeAliases = aliasesFromItems(attributeItems, attributeTokenFactory);
         this.lexicon.addDomain(attributeAliases);
+
+        // Entities
+        const genericEntities = aliasesFromYamlString(
+            fs.readFileSync(genericEntityFile, 'utf8'),
+            entityTokenFactory);
+        this.lexicon.addDomain(genericEntities);
 
         // Entities
         const entities = aliasesFromYamlString(

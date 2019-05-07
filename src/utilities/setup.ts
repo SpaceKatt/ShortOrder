@@ -37,11 +37,16 @@ export function setup(
     debugMode: boolean,
     itemFolding = true
 ): World {
-    const genericItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as ParentItemDescription[];
-    const specificItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as ItemDescription[];
+    const genericItems = yaml.safeLoad(fs.readFileSync(generalCatalogFile, 'utf8')) as {
+      items: ParentItemDescription[];
+    };
+
+    const specificItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as {
+        items: ItemDescription[];
+    };
     const catalogItems: CatalogItems = {
-        genericItems,
-        specificItems,
+        genericItems: genericItems.items,
+        specificItems: specificItems.items,
     };
 
     validateCatalogItems(catalogItems);

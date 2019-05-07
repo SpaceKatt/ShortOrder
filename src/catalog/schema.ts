@@ -142,17 +142,11 @@ const catalogItemSchema = {
                     ],
                     "type": "object"
                 },
-                "isOption": {
-                    "type": "boolean"
-                },
                 "isQuantifiable": {
                     "type": "boolean"
                 },
                 "key": {
                     "type": "string"
-                },
-                "matrix": {
-                    "type": "number"
                 },
                 "name": {
                     "type": "string"
@@ -166,17 +160,83 @@ const catalogItemSchema = {
                 "price": {
                     "type": "number"
                 },
-                "standalone": {
-                    "type": "boolean"
+                "sku": {
+                    "type": "number"
                 }
             },
             "required": [
                 "aliases",
                 "composition",
+                "key",
                 "name",
                 "pid",
                 "price",
-                "standalone"
+                "sku"
+            ],
+            "type": "object"
+        },
+        "ParentItemDescription": {
+            "properties": {
+                "aliases": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "composition": {
+                    "properties": {
+                        "choices": {
+                            "items": {
+                                "$ref": "#/definitions/ChoiceDescription"
+                            },
+                            "type": "array"
+                        },
+                        "defaults": {
+                            "items": {
+                                "$ref": "#/definitions/ComponentDescription"
+                            },
+                            "type": "array"
+                        },
+                        "options": {
+                            "items": {
+                                "$ref": "#/definitions/ComponentDescription"
+                            },
+                            "type": "array"
+                        },
+                        "substitutions": {
+                            "items": {
+                                "$ref": "#/definitions/SubstitutionDescription"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "choices",
+                        "defaults",
+                        "options",
+                        "substitutions"
+                    ],
+                    "type": "object"
+                },
+                "isQuantifiable": {
+                    "type": "boolean"
+                },
+                "matrix": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pid": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "aliases",
+                "composition",
+                "matrix",
+                "name",
+                "pid"
             ],
             "type": "object"
         },
@@ -201,7 +261,13 @@ const catalogItemSchema = {
         }
     },
     "properties": {
-        "items": {
+        "genericItems": {
+            "items": {
+                "$ref": "#/definitions/ParentItemDescription"
+            },
+            "type": "array"
+        },
+        "specificItems": {
             "items": {
                 "$ref": "#/definitions/ItemDescription"
             },
@@ -209,7 +275,8 @@ const catalogItemSchema = {
         }
     },
     "required": [
-        "items"
+        "genericItems",
+        "specificItems"
     ],
     "type": "object"
 };

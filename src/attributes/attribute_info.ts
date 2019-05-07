@@ -141,7 +141,7 @@ export class AttributeInfo {
     }
 
     // Returns the PID of an entity with a specific key.
-    getPID(key: string): PID | undefined {
+    getSKU(key: string): PID | undefined {
         return this.keyToEntityId.get(key);
     }
 }
