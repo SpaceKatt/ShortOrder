@@ -402,7 +402,7 @@ export class CartOps {
 
     formatItemName(item: ItemDescription): string {
         if (this.showPIDs) {
-            return `${item.name} (${item.pid})`;
+            return `${item.name} (${item.sku})`;
         }
         else {
             return item.name;
