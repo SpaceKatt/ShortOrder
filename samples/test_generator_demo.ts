@@ -15,10 +15,12 @@ import {
 } from '../src';
 
 function setOptionOfPredicate(catalog: Catalog, child: PID, parent: PID) {
-    const childInfo = catalog.get(child);
-    const parentInfo = catalog.get(parent);
+    // TODO: Update this logic, there is no rule set. This just checks
+    //       thar be a generic item and a specific item
+    const childInfo = catalog.has(parent);
+    const parentInfo = catalog.hasSKU(child);
 
-    return parentInfo.standalone && !childInfo.standalone;
+    return parentInfo && !childInfo;
 }
 
 function usage() {
@@ -38,6 +40,7 @@ async function go() {
     // const outfile = args._[0];
 
     const world = setup(
+        path.join(__dirname, './data/restaurant-en/generic_menu.yaml'),
         path.join(__dirname, './data/restaurant-en/menu.yaml'),
         path.join(__dirname, './data/restaurant-en/intents.yaml'),
         path.join(__dirname, './data/restaurant-en/attributes.yaml'),

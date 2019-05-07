@@ -12,6 +12,7 @@ function unkownTokenFactory(terms: string[]) {
 }
 
 export function runRelevanceTest(
+    genericEntityFile: string,
     entityFile: string,
     intentsFile: string,
     attributesFile: string,
@@ -25,6 +26,7 @@ export function runRelevanceTest(
 
     const debugMode = false;
     const unified = new Unified(
+        genericEntityFile,
         entityFile,
         intentsFile,
         attributesFile,

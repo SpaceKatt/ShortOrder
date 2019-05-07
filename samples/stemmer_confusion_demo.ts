@@ -11,6 +11,7 @@ function stemmerConfusionDemo() {
     console.log();
 
     const unified = new Unified(
+        path.join(__dirname, './data/restaurant-en/generic_menu.yaml'),
         path.join(__dirname, './data/restaurant-en/menu.yaml'),
         path.join(__dirname, './data/restaurant-en/intents.yaml'),
         path.join(__dirname, './data/restaurant-en/attributes.yaml'),

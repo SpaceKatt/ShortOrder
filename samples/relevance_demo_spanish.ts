@@ -3,6 +3,7 @@ import { runRelevanceTest } from './relevance_demo_helper';
 
 function relevanceDemoSpanish(showPassedCases = false) {
     runRelevanceTest(
+        path.join(__dirname, './data/restaurant-en/generic_menu.yaml'),
         path.join(__dirname, './data/restaurant-es/menu.yaml'),
         path.join(__dirname, './data/restaurant-es/intents.yaml'),
         path.join(__dirname, './data/restaurant-es/attributes.yaml'),

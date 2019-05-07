@@ -11,6 +11,7 @@ import {
 
 function go(utterances: string[], debugMode: boolean) {
     const world = setup(
+        path.join(__dirname, './data/restaurant-en/generic_menu.yaml'),
         path.join(__dirname, './data/restaurant-en/menu.yaml'),
         path.join(__dirname, './data/restaurant-en/intents.yaml'),
         path.join(__dirname, './data/restaurant-en/attributes.yaml'),

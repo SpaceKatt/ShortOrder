@@ -6,7 +6,7 @@ import * as yaml from 'js-yaml';
 import { PID } from 'token-flow';
 
 import { attributesFromYamlString, AttributeInfo, AttributeItem, itemsFromAttributes, Matrix } from '../src/attributes';
-import { Catalog, ItemDescription } from '../src/catalog';
+import { Catalog, ParentItemDescription, ItemDescription } from '../src/catalog';
 
 function* combinationsHelper(matrix: Matrix, index: number, map: Map<PID,PID>): IterableIterator<Map<PID, PID>> {
     const dimension = matrix.dimensions[index];
@@ -51,14 +51,15 @@ function getName(
 function explode(
     attributeFromPID: Map<PID, AttributeItem>,
     info: AttributeInfo,
-    items: IterableIterator<ItemDescription>
+    items: IterableIterator<ItemDescription>,
+    parentItems: IterableIterator<ParentItemDescription>,
 ) {
     const outputs: ItemDescription[] = [];
 
-    for (const item of items) {
-        outputs.push(item);
+    for (const generic of parentItems) {
+        //outputs.push(generic);
 
-        const matrixId = item.matrix;
+        const matrixId = generic.matrix;
         if (matrixId === undefined) {
             const message = `unknown matrix id ${matrixId}`;
             throw TypeError(message);
@@ -69,19 +70,21 @@ function explode(
             throw TypeError(message);
         }
 
-        let pid = item.pid + 1;
-        const base = item.name;
+        let sku = generic.pid + 1;
+        const base = generic.name;
         for (const c of combinations(matrix)) {
             const name = getName(c, attributeFromPID, base);
-            const key = matrix.getKey(item.pid, c, info);
+            const itemKey = matrix.getKey(generic.pid, c, info);
+            const itemPrice = items.next().value.price;
+
 
             outputs.push({
-                pid,
+                pid: generic.pid,
                 name,
                 aliases: [],
-                price: item.price,
-                standalone: true,
-                key,
+                price: itemPrice,
+                key: itemKey,
+                sku,
                 composition: {
                     defaults: [],
                     choices: [],
@@ -90,14 +93,19 @@ function explode(
                 }
             });
 
-            console.log(`${pid}: ${name} (key = ${key})`);
-            pid++;
+            console.log(`${sku}: ${name} (key = ${itemKey})`);
+            sku++;
         }
     }
     return outputs;
 }
 
-function go(attributesFile: string, items: IterableIterator<ItemDescription>) {
+function go(
+  attributesFile: string,
+  specificItems: IterableIterator<ItemDescription>,
+  genericItems: IterableIterator<ParentItemDescription>,
+
+) {
     const attributes =
         attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
     
@@ -110,25 +118,41 @@ function go(attributesFile: string, items: IterableIterator<ItemDescription>) {
         attributeFromPID.set(attribute.pid, attribute);
     }
 
-    const catalogItems = { items: [] };
+    const catalogItems = { 
+        genericItems: [],
+        specificItems: [],
+    };
+
     const catalog = new Catalog(catalogItems);
 
     const info = AttributeInfo.factory(catalog, attributes);
 
-    const outputs = explode(attributeFromPID, info, items);
+    const outputs = explode(attributeFromPID, info, specificItems, genericItems);
 
     const yamlText = yaml.dump(outputs);
     console.log(yamlText);
 }
 
 const coffeeMatrix = 1;
+const genericLatte: ParentItemDescription = {
+    pid: 9000,
+    name: 'latte',
+    aliases: ['latte'],
+    matrix: coffeeMatrix,
+    composition: {
+        defaults: [],
+        choices: [],
+        substitutions: [],
+        options: []
+    }
+};
 const latte: ItemDescription = {
     pid: 9000,
     name: 'latte',
     aliases: ['latte'],
     price: 1.99,
-    standalone: true,
-    matrix: coffeeMatrix,
+    key: String(coffeeMatrix),
+    sku: 90001,
     composition: {
         defaults: [],
         choices: [],
@@ -138,13 +162,25 @@ const latte: ItemDescription = {
 };
 
 const coneMatrix = 2;
+const genericCone: ParentItemDescription = {
+    pid: 8000,
+    name: 'cone',
+    aliases: ['cone', 'ice cream [cone]'],
+    matrix: coneMatrix,
+    composition: {
+        defaults: [],
+        choices: [],
+        substitutions: [],
+        options: []
+    }
+};
 const cone: ItemDescription = {
     pid: 8000,
     name: 'cone',
     aliases: ['cone', 'ice cream [cone]'],
     price: 1.99,
-    standalone: true,
-    matrix: coneMatrix,
+    key: String(coneMatrix),
+    sku: 80001,
     composition: {
         defaults: [],
         choices: [],
@@ -155,5 +191,6 @@ const cone: ItemDescription = {
 
 go(
     path.join(__dirname, './data/restaurant-en/attributes.yaml'),
-    [cone, latte].values()
+    [cone, latte].values(),
+    [genericCone, genericLatte].values(),
 );

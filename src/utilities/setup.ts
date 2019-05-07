@@ -9,6 +9,8 @@ import {
     CatalogItems,
     ConvertDollarsToPennies,
     Parser,
+    ParentItemDescription,
+    ItemDescription,
     Unified,
     validateCatalogItems
 } from '..';
@@ -25,6 +27,7 @@ export interface World {
 
 
 export function setup(
+    generalCatalogFile: string,
     catalogFile: string,
     intentsFile: string,
     attributesFile: string,
@@ -34,7 +37,13 @@ export function setup(
     debugMode: boolean,
     itemFolding = true
 ): World {
-    const catalogItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as CatalogItems;
+    const genericItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as ParentItemDescription[];
+    const specificItems = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8')) as ItemDescription[];
+    const catalogItems: CatalogItems = {
+        genericItems,
+        specificItems,
+    };
+
     validateCatalogItems(catalogItems);
     ConvertDollarsToPennies(catalogItems);
     const catalog = new Catalog(catalogItems);
@@ -46,6 +55,7 @@ export function setup(
 
     const unified = 
         new Unified(
+            generalCatalogFile,
             catalogFile,
             intentsFile,
             attributesFile,
