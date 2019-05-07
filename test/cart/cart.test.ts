@@ -1,3 +1,4 @@
+// TODO: Update tests to reflect change in type defininition
 import { assert } from 'chai';
 import 'mocha';
 import { Cart, CartOps, Catalog, ChoiceDescription, ConvertDollarsToPennies, ItemInstance, State, SubstitutionDescription } from '../../src';
@@ -28,7 +29,8 @@ function makeStandalone(
         name,
         aliases: [] as string[],
         price,
-        standalone: true,
+        sku: pid,
+        key: String(pid),
         composition: {
             defaults: defaults.map(makeComponent),
             choices,
@@ -48,7 +50,8 @@ function makeIngredient(
         name,
         aliases: [] as string[],
         price,
-        standalone: false,
+        sku: pid,
+        key: String(pid),
         composition: {
             defaults: [],
             choices: [],
@@ -59,7 +62,8 @@ function makeIngredient(
 }
 
 const catalogItems = {
-    items: [
+    genericItems: [],
+    specificItems: [
         makeStandalone(2, 'Cheeseburger', 1.99, [5000, 5100, 5200, 5201, 5202], [], [], [5101, 5102, 7000]),
         makeIngredient(5000, 'Seasame Bun', 0),
         makeIngredient(5100, 'American Cheese Slice', 0.30),
@@ -73,7 +77,8 @@ const catalogItems = {
             name: "Well Done",
             aliases: [] as string[],
             price: 0,
-            standalone: false,
+            sku: 7000,
+            key: String(7000),
             note: true,
             composition: {
                 defaults: [],

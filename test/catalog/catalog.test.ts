@@ -1,3 +1,4 @@
+// TODO: Update tests to reflect new types
 import { assert } from 'chai';
 import 'mocha';
 
@@ -13,8 +14,9 @@ const item1: ItemDescription = {
     pid: 1,
     name: 'item1',
     aliases: [],
+    key: '1',
+    sku: 1,
     price: 0.99,
-    standalone: true,
     composition: {
         defaults: [
             {
@@ -62,7 +64,8 @@ function makeItem(pid: PID) {
         name: `item${pid}`,
         aliases: [],
         price: anyPrice,
-        standalone: true,
+        key: String(pid),
+        sku: pid,
         composition: {
             defaults: [],
             choices: [],
@@ -79,7 +82,7 @@ const item5 = makeItem(5);
 const item100 = makeItem(100);
 const item400 = makeItem(400);
 
-const catalog = new Catalog({ items: [item1, item2, item3, item4, item5, item100, item400] });
+const catalog = new Catalog({ genericItems: [], specificItems: [item1, item2, item3, item4, item5, item100, item400] });
 
 describe('Catalog', () => {
     describe('PredicatesX', () => {
