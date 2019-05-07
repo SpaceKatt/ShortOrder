@@ -373,9 +373,9 @@ describe('Matrix', () => {
 
             info.addSpecificEntity(2, '456');
 
-            assert.equal(1, info.getPID('123'));
-            assert.equal(2, info.getPID('456'));
-            assert.equal(undefined, info.getPID(unknownKey));
+            assert.equal(1, info.getSKU('123'));
+            assert.equal(2, info.getSKU('456'));
+            assert.equal(undefined, info.getSKU(unknownKey));
         });
     });
 
@@ -463,30 +463,30 @@ describe('Matrix', () => {
             const builder = new MatrixEntityBuilder(info);
 
             // getPID() before adding entity should throw.
-            const f = () => builder.getPID();
+            const f = () => builder.getSKU();
             assert.throws(f, 'no entity set');
 
             // Add a cone entity.
             builder.setEntity(makeEntityToken(cone));
 
             // All attributes are default.
-            assert.equal(builder.getPID(), mediumVanillaRegularCone);
+            assert.equal(builder.getSKU(), mediumVanillaRegularCone);
 
             // Add flavor=chocolate, style=regular, allow size to default.
             builder.addAttribute(makeAttributeToken(flavorChocolate));
             builder.addAttribute(makeAttributeToken(styleRegular));
 
-            assert.equal(builder.getPID(), mediumChocolateRegularCone);
+            assert.equal(builder.getSKU(), mediumChocolateRegularCone);
 
             // Now specify large size, which is not a default.
             builder.addAttribute(makeAttributeToken(sizeLarge));
-            assert.equal(builder.getPID(), largeChocolateRegularCone);
+            assert.equal(builder.getSKU(), largeChocolateRegularCone);
 
             // Now create another builder and set the entity to something that
             // is not generic.
             const builder2 = new MatrixEntityBuilder(info,);
             builder2.setEntity(makeEntityToken(unknownPID));
-            assert.equal(builder2.getPID(), unknownPID);
+            assert.equal(builder2.getSKU(), unknownPID);
         });
     });
 
