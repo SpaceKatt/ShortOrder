@@ -1,0 +1,37 @@
+items:
+###############################################################################
+#
+# Generic Ice Cream Cones
+#
+###############################################################################
+  - pid: 8000
+    name: cone
+    aliases:
+      - cone
+      - 'ice cream [cone]'
+    price: 1.99
+    standalone: true
+    matrix: 2
+    composition:
+      defaults: []
+      choices: []
+      substitutions: []
+      options: []
+###############################################################################
+#
+# Generic Coffees
+#
+###############################################################################
+  - pid: 9000
+    name: latte
+    aliases:
+      - latte
+    price: 1.99
+    standalone: true
+    matrix: 1
+    composition:
+      defaults: []
+      choices: []
+      substitutions: []
+      options: []
+
