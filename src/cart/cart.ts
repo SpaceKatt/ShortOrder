@@ -106,7 +106,7 @@ export class CartOps {
 
         // The update did not apply to anything already in the cart.
         // Attempt to add pid to cart as top-level, stand-alone item.
-        if (!changed && this.catalog.isStandalone(pid) && quantity > 0) {
+        if (!changed && this.catalog.hasSKU(pid) && quantity > 0) {
             changed = true;
             updated.unshift({ pid, quantity, modifications: [] });
         }
@@ -347,10 +347,11 @@ export class CartOps {
             price = item.quantity * d.price;
         }
         else {
-            if (this.catalog.isNote(item.pid)) {
-                middle = name;
-            }
-            else if (this.catalog.isChoiceOf(item.pid, parent)) {
+            //if (this.catalog.isNote(item.pid)) {
+                //middle = name;
+            //}
+            //else if (this.catalog.isChoiceOf(item.pid, parent)) {
+            if (this.catalog.isChoiceOf(item.pid, parent)) {
                 left = item.quantity.toString();
                 middle = name;
                 price = undefined;

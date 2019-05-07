@@ -12,12 +12,12 @@ export interface EntityToken extends Token {
 }
 
 export function entityTokenFactory(item: Item): Token {
-    if ((item as ItemDescription).isOption) {
-        return CreateOption(item.pid, item.name);
-    }
-    else {
+    //if ((item as ItemDescription).isOption) {
+        //return CreateOption(item.pid, item.name);
+    //}
+    //else {
         return CreateEntity(item.pid, item.name);
-    }
+    //}
 }
 
 export function CreateEntity(pid: PID, name: string) {

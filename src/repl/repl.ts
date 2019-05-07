@@ -134,10 +134,8 @@ export function runRepl(
         help: "Display menu",
         action(line: string) {
             if (line.length === 0) {
-                for (const [pid, item] of catalog.map) {
-                    if (item.standalone) {
-                        console.log(`${pid} ${item.name}`);
-                    }
+                for (const [pid, item] of catalog.mapSpecific) {
+                    console.log(`${pid} ${item.name}`);
                 }
             }
             else if (!isNaN(Number(line))) {

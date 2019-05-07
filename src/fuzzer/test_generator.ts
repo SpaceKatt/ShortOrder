@@ -46,7 +46,7 @@ export class RandomProducts {
     ) {
         this.random = random;
 
-        for (const [pid, item] of catalog.map.entries()) {
+        for (const [pid, item] of catalog.mapGeneric.entries()) {
             if (item.matrix !== undefined) {
                 this.entities.push(new EntityGenerator(attributeInfo, catalog, item.pid, entityQuantities));
             }

@@ -48,12 +48,12 @@ function FormatEntityToken(token: EntityToken, catalog: Catalog) {
     const item = catalog.get(token.pid);
     if (item) {
         const entity = item.name.replace(/\s/g, '_').toUpperCase();
-        if (item.standalone) {
-            return chalk.bgGreenBright(`[ITEM:${entity},${token.pid}]`);    
-        }
-        else {
+        //if (item.standalone) {
+            //return chalk.bgGreenBright(`[ITEM:${entity},${token.pid}]`);    
+        //}
+        //else {
             return chalk.bgGreen(`[OPTION:${entity},${token.pid}]`);    
-        }
+        //}
     }
     else {
         const entity = token.name.replace(/\s/g, '_').toUpperCase();

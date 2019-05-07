@@ -51,6 +51,7 @@ export interface IndexableItem {
     pid: PID;
     name: string;
     aliases: string[];
+    //price: number;
 }
 
 export interface IndexableItemCollection {
@@ -58,16 +59,28 @@ export interface IndexableItemCollection {
 }
 
 // note; ItemDescription shouldn't be a kitchensink of properties
+export interface ParentItemDescription extends IndexableItem {
+    pid: PID;
+    name: string;
+    aliases: string[];
+    matrix: PID;
+    isQuantifiable?: boolean;
+    composition: {
+        defaults: ComponentDescription[];
+        choices: ChoiceDescription[];
+        substitutions: SubstitutionDescription[];
+        options: ComponentDescription[];
+    };
+}
+
 export interface ItemDescription extends IndexableItem {
     pid: PID;
     name: string;
     aliases: string[];
     price: number;
-    standalone: boolean;
+    key: string;
+    sku: PID;
     note?: boolean;
-    matrix?: PID;
-    key?: string;
-    isOption?: boolean;
     isQuantifiable?: boolean;
     composition: {
         defaults: ComponentDescription[];
@@ -78,5 +91,6 @@ export interface ItemDescription extends IndexableItem {
 }
 
 export interface CatalogItems {
-    items: ItemDescription[];
+    genericItems: ParentItemDescription[];
+    specificItems: ItemDescription[];
 }

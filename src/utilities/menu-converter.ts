@@ -23,43 +23,46 @@ interface CatalogItemsOld {
     items: ItemDescriptionOld[];
 }
 
-export function convert(infile: string, outfile: string) {
-    const yamlTextOld = fs.readFileSync(infile, 'utf8');
-    const yamlRootOld = yaml.safeLoad(yamlTextOld) as CatalogItemsOld;
+// TODO: redo this function, changing the CatalogItems type appears
+//       to have broken this
+//export function convert(infile: string, outfile: string) {
+    //const yamlTextOld = fs.readFileSync(infile, 'utf8');
+    //const yamlRootOld = yaml.safeLoad(yamlTextOld) as CatalogItemsOld;
 
-    const root: CatalogItems = {
-        items: yamlRootOld.items.map( item => {
-            const { defaults, options, ...rest } = item;
-            return {
-                ...rest,
-                composition: {
-                    defaults: defaults.map( pid => {
-                        return {
-                            pid,
-                            defaultQuantity: 1,
-                            minQuantity: 0,
-                            maxQuantity: 3,
-                            price: 0.30
-                        } as ComponentDescription;
-                    }),
-                    choices: [] as ChoiceDescription[],
-                    substitutions: [] as SubstitutionDescription[],
-                    options: options.map( pid => {
-                        return {
-                            pid,
-                            defaultQuantity: 1,
-                            minQuantity: 0,
-                            maxQuantity: 3,
-                            price: 0.30
-                        } as ComponentDescription;
-                    })
-                }
-            };
-        })
-    };
+    //const root: CatalogItems = {
+        //genericItems: [],
+        //specificItems: yamlRootOld.items.map( item => {
+            //const { defaults, options, ...rest } = item;
+            //return {
+                //...rest,
+                //composition: {
+                    //defaults: defaults.map( pid => {
+                        //return {
+                            //pid,
+                            //defaultQuantity: 1,
+                            //minQuantity: 0,
+                            //maxQuantity: 3,
+                            //price: 0.30
+                        //} as ComponentDescription;
+                    //}),
+                    //choices: [] as ChoiceDescription[],
+                    //substitutions: [] as SubstitutionDescription[],
+                    //options: options.map( pid => {
+                        //return {
+                            //pid,
+                            //defaultQuantity: 1,
+                            //minQuantity: 0,
+                            //maxQuantity: 3,
+                            //price: 0.30
+                        //} as ComponentDescription;
+                    //})
+                //}
+            //};
+        //})
+    //};
 
-    const yamlTextNew = yaml.safeDump(root);
+    //const yamlTextNew = yaml.safeDump(root);
 
-    fs.writeFileSync(outfile, yamlTextNew);
-}
+    //fs.writeFileSync(outfile, yamlTextNew);
+//}
 

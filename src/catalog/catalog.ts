@@ -1,4 +1,9 @@
-import { CatalogItems, ItemDescription, ComponentDescription } from './interfaces';
+import {
+  CatalogItems,
+  ItemDescription,
+  ParentItemDescription,
+  ComponentDescription
+} from './interfaces';
 import { PID } from 'token-flow';
 
 export type OptionOfPredicate = (catalog: Catalog, child: PID, parent: PID) => boolean;
@@ -8,29 +13,50 @@ export class Catalog {
     // implements CatalogItems {
     // TODO: don't really need to store items - just the map.
     // items: ItemDescription[];
-    readonly map = new Map<PID, ItemDescription>();
+    readonly mapGeneric = new Map<PID, ParentItemDescription>();
+    readonly mapSpecific = new Map<PID, ItemDescription>();
     private optionOfPredicate: OptionOfPredicate | undefined;
 
     constructor(catalogItems: CatalogItems) {
         // this.items = catalogItems.items;
 
-        for (const item of catalogItems.items) {
-            if (this.map.has(item.pid)) {
+        for (const item of catalogItems.genericItems) {
+            if (this.mapGeneric.has(item.pid)) {
                 throw TypeError(`Catalog: encountered duplicate pid ${item.pid}.`);
             }
-            this.map.set(item.pid, item);
+            this.mapGeneric.set(item.pid, item);
+        }
+
+        for (const item of catalogItems.specificItems) {
+            if (this.mapSpecific.has(item.pid)) {
+                throw TypeError(`Catalog: encountered duplicate pid ${item.pid}.`);
+            }
+            this.mapSpecific.set(item.pid, item);
         }
     }
 
     // DESGIN NOTE: can't just assign `this.map.has` to `has` because `this` won't
     // be bound correctly.
     has(pid: PID) {
-        return this.map.has(pid);
+        return this.mapGeneric.has(pid);
+    }
+
+    hasSKU(sku: PID) {
+        return this.mapSpecific.has(sku);
+    }
+
+    // TODO: modify get to throw if not available.
+    getParent(pid: PID): ParentItemDescription {
+        const item = this.mapGeneric.get(pid);
+        if (!item) {
+            throw TypeError(`Catalog.get(): cannot find pid=${pid}`);
+        }
+        return item;
     }
 
     // TODO: modify get to throw if not available.
     get(pid: PID): ItemDescription {
-        const item = this.map.get(pid);
+        const item = this.mapSpecific.get(pid);
         if (!item) {
             throw TypeError(`Catalog.get(): cannot find pid=${pid}`);
         }
@@ -91,15 +117,10 @@ export class Catalog {
             || this.isSubstitutionOf(child, parent);
     }
 
-    isStandalone(pid: PID) {
-        const item = this.get(pid);
-        return item.standalone;
-    }
-
-    isNote(pid: PID) {
-        const item = this.get(pid);
-        return item.note === true;
-    }
+    //isNote(pid: PID) {
+        //const item = this.get(pid);
+        //return item.note === true;
+    //}
 
     defaultQuantity(child: PID, parent: PID) {
         const p = this.get(parent);

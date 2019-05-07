@@ -46,13 +46,11 @@ export class AttributeInfo {
             info.addMatrix(new Matrix(matrix.mid, dimensions));
         }
 
-        for (const item of catalog.map.values()) {
-            if (item.matrix) {
-                info.addGenericEntity(item.pid, item.matrix);
-            }
-            else if (item.key) {
-                info.addSpecificEntity(item.pid, item.key);
-            }
+        for (const item of catalog.mapGeneric.values()) {
+            info.addGenericEntity(item.pid, item.matrix);
+        }
+        for (const item of catalog.mapSpecific.values()) {
+            info.addSpecificEntity(item.sku, item.key);
         }
 
         return info;

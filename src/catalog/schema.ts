@@ -237,7 +237,7 @@ export function validateIndexableItemsCollection(collection: IndexableItemCollec
 }
 
 export function ConvertDollarsToPennies(catalog: CatalogItems) {
-    for (const item of catalog.items) {
+    for (const item of catalog.specificItems) {
         if (item.price !== undefined) {
             item.price = Math.round(item.price * 100);
         }
