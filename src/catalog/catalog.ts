@@ -77,6 +77,17 @@ export class Catalog {
         );
     }
 
+    // TODO: MatrixID Type?
+    getMatrixFromPID(pid: PID): number {
+        const result = this.mapGeneric.get(pid);
+
+        if (result) {
+            return result.matrix;
+        } else {
+            return -1;
+        }
+    }
+
     isChoiceOf(child: PID, parent: PID): boolean {
         const p = this.get(parent);
         for (const choice of p.composition.choices) {
@@ -117,10 +128,10 @@ export class Catalog {
             || this.isSubstitutionOf(child, parent);
     }
 
-    //isNote(pid: PID) {
-        //const item = this.get(pid);
-        //return item.note === true;
-    //}
+    isNote(pid: PID) {
+        const item = this.get(pid);
+        return item.note === true;
+    }
 
     defaultQuantity(child: PID, parent: PID) {
         const p = this.get(parent);

@@ -347,11 +347,10 @@ export class CartOps {
             price = item.quantity * d.price;
         }
         else {
-            //if (this.catalog.isNote(item.pid)) {
-                //middle = name;
-            //}
-            //else if (this.catalog.isChoiceOf(item.pid, parent)) {
-            if (this.catalog.isChoiceOf(item.pid, parent)) {
+            if (this.catalog.isNote(item.pid)) {
+                middle = name;
+            }
+            else if (this.catalog.isChoiceOf(item.pid, parent)) {
                 left = item.quantity.toString();
                 middle = name;
                 price = undefined;
